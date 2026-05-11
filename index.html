@@ -272,10 +272,10 @@
     .opt-check {
       width: 22px; height: 22px;
       border-radius: 50%;
-      border: 1.5px solid #c8ccca;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
       transition: background 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
+      border: 1.5px solid #c8ccca;
     }
     .opt-btn.selected .opt-check {
       background: var(--green);
@@ -922,7 +922,7 @@
 </div>
 
 <script>
-  const SHEETS_URL = "https://script.google.com/macros/s/AKfycbwtPdorLwbevocSoxYY2VzoIDCAsoG-txdCqCnX_afc55m50jjMVGXBG1hlPtJ3UoNE/exec";
+  const SHEETS_URL = "https://script.google.com/macros/s/AKfycbzFrOy4pFzm3R3GcPHwZWkk2XaT-JXtgWy8YGVghNFoJZjSq9bzUipWjVG0j8Bpf7FS/exec";
 
   const answers = {};
   let skipInternacional = false;
@@ -960,7 +960,6 @@
 
     setTimeout(() => {
       currentEl.classList.remove('active', leaveClass);
-      // Force reflow so staggered children animations restart
       void nextEl.offsetWidth;
       nextEl.classList.add('active');
       if (enterClass) nextEl.classList.add(enterClass);
@@ -977,7 +976,6 @@
   function select(q, val, btn) {
     answers['p' + q] = val;
     document.getElementById('opts-' + q).querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
-    // re-trigger animation if same was clicked
     btn.classList.remove('selected');
     void btn.offsetWidth;
     btn.classList.add('selected');
@@ -1037,7 +1035,6 @@
   document.addEventListener('keydown', (e) => {
     if (transitioning) return;
     if (e.key === 'Enter') {
-      // welcome
       if (currentScreen === 0) { goTo(1, 'forward'); return; }
       if (currentScreen === 15) { submitForm(); return; }
       if (typeof currentScreen === 'number') {
