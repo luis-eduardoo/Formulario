@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Questionário – Finanças Comportamentais | TCC Tiffani Yazigi Oliveira</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #1D9E75;
+      --green-deep: #0F6E56;
+      --green-soft: #E8F5EE;
+      --green-text: #0a4a37;
+      --bg: #F6F5F1;
+      --bg-grain: #F1EFE8;
+      --surface: #FFFFFF;
+      --border: rgba(15, 23, 20, 0.08);
+      --border-strong: rgba(15, 23, 20, 0.14);
+      --text: #14201C;
+      --text-muted: #5a6660;
+      --text-hint: #94a09a;
+      --radius: 12px;
+      --radius-lg: 22px;
+      --ease-out: cubic-bezier(.22,1,.36,1);
+      --ease-in: cubic-bezier(.4,0,1,1);
+      --ease-bounce: cubic-bezier(.34,1.56,.64,1);
+
+      --shadow-card: 0 1px 2px rgba(15,23,20,0.04), 0 12px 32px -8px rgba(15,23,20,0.08), 0 32px 64px -24px rgba(15,23,20,0.10);
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--bg);
+      font-family: 'Instrument Sans', system-ui, sans-serif;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 56px 16px 80px;
+      background-image:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(29, 158, 117, 0.06), transparent 60%),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(29, 158, 117, 0.04), transparent 60%);
+      background-attachment: fixed;
+    }
+
+    /* ── Top mark ── */
+    .topbar {
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+      padding: 0 4px;
+    }
+    .topbar-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+    }
+    .topbar-brand .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 4px rgba(29,158,117,0.15);
+      animation: pulseDot 2.4s ease-in-out infinite;
+    }
+    @keyframes pulseDot {
+      0%, 100% { box-shadow: 0 0 0 4px rgba(29,158,117,0.15); }
+      50%      { box-shadow: 0 0 0 7px rgba(29,158,117,0.05); }
+    }
+    .topbar-step { font-size: 12px; color: var(--text-hint); font-variant-numeric: tabular-nums; }
+
+    /* ── Progress bar ── */
+    #progress-wrap {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: rgba(15,23,20,0.05);
+      z-index: 100;
+    }
+    #progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green-deep), var(--green));
+      border-radius: 0 3px 3px 0;
+      transition: width 0.7s cubic-bezier(.22,1,.36,1);
+      width: 0%;
+      position: relative;
+    }
+    #progress-fill::after {
+      content: '';
+      position: absolute;
+      right: 0; top: -1px;
+      width: 8px; height: 5px;
+      background: var(--green);
+      filter: blur(4px);
+      opacity: 0.7;
+    }
+
+    /* ── Card container ── */
+    #card {
+      width: 100%;
+      max-width: 560px;
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
+      padding: 44px 44px 36px;
+      min-height: 420px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* corner ornament */
+    #card::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(29,158,117,0.08), transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ── Screen transitions ── */
+    .screen {
+      display: none;
+      flex-direction: column;
+      gap: 22px;
+      position: relative;
+      z-index: 1;
+    }
+    .screen.active {
+      display: flex;
+      animation: slideInFwd 0.5s var(--ease-out) both;
+    }
+    .screen.leaving {
+      animation: slideOutFwd 0.32s var(--ease-in) both;
+      pointer-events: none;
+      position: absolute;
+      top: 44px; left: 44px;
+      width: calc(100% - 88px);
+    }
+    .screen.entering-back { animation: slideInBack 0.5s var(--ease-out) both; }
+    .screen.leaving-back {
+      animation: slideOutBack 0.32s var(--ease-in) both;
+      pointer-events: none;
+      position: absolute;
+      top: 44px; left: 44px;
+      width: calc(100% - 88px);
+    }
+
+    @keyframes slideInFwd {
+      from { opacity: 0; transform: translateX(40px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideOutFwd {
+      from { opacity: 1; transform: translateX(0); }
+      to   { opacity: 0; transform: translateX(-40px); }
+    }
+    @keyframes slideInBack {
+      from { opacity: 0; transform: translateX(-40px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideOutBack {
+      from { opacity: 1; transform: translateX(0); }
+      to   { opacity: 0; transform: translateX(40px); }
+    }
+
+    /* Stagger inside each active screen */
+    .screen.active > * {
+      opacity: 0;
+      animation: staggerIn 0.55s var(--ease-out) both;
+    }
+    .screen.active > *:nth-child(1) { animation-delay: 0.05s; }
+    .screen.active > *:nth-child(2) { animation-delay: 0.12s; }
+    .screen.active > *:nth-child(3) { animation-delay: 0.19s; }
+    .screen.active > *:nth-child(4) { animation-delay: 0.26s; }
+    .screen.active > *:nth-child(5) { animation-delay: 0.33s; }
+    .screen.active > *:nth-child(6) { animation-delay: 0.40s; }
+    .screen.active > *:nth-child(7) { animation-delay: 0.47s; }
+
+    @keyframes staggerIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Block label ── */
+    .block-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--green);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .block-label::before {
+      content: '';
+      width: 18px; height: 1px;
+      background: var(--green);
+      display: inline-block;
+    }
+
+    /* ── Question title ── */
+    .question-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-weight: 500;
+      font-size: 26px;
+      line-height: 1.25;
+      letter-spacing: -0.015em;
+      color: var(--text);
+      text-wrap: pretty;
+    }
+
+    /* ── Options ── */
+    .options-grid { display: flex; flex-direction: column; gap: 8px; }
+
+    .opt-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px 14px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+      font-size: 15px;
+      color: var(--text);
+      transition: border-color 0.2s var(--ease-out),
+                  background 0.2s var(--ease-out),
+                  transform 0.2s var(--ease-out),
+                  box-shadow 0.2s var(--ease-out);
+      width: 100%;
+      position: relative;
+    }
+    .opt-btn:hover {
+      border-color: var(--green);
+      background: var(--green-soft);
+      transform: translateX(3px);
+    }
+    .opt-btn:active { transform: translateX(3px) scale(0.99); }
+
+    .opt-btn.selected {
+      border-color: var(--green);
+      background: var(--green-soft);
+      color: var(--green-text);
+      font-weight: 500;
+      box-shadow: 0 0 0 3px rgba(29,158,117,0.10);
+      animation: pulseBounce 0.55s var(--ease-bounce);
+    }
+    @keyframes pulseBounce {
+      0%   { transform: translateX(3px) scale(1); }
+      40%  { transform: translateX(3px) scale(1.025); }
+      70%  { transform: translateX(3px) scale(0.995); }
+      100% { transform: translateX(3px) scale(1); }
+    }
+
+    .opt-check {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 1.5px solid #c8ccca;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
+    }
+    .opt-btn.selected .opt-check {
+      background: var(--green);
+      border-color: var(--green);
+      animation: checkPop 0.4s var(--ease-bounce);
+    }
+    @keyframes checkPop {
+      0%   { transform: scale(0.6); }
+      60%  { transform: scale(1.18); }
+      100% { transform: scale(1); }
+    }
+    .opt-check-inner {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: white;
+      opacity: 0;
+      transform: scale(0);
+      transition: opacity 0.2s var(--ease-out), transform 0.3s var(--ease-bounce);
+    }
+    .opt-btn.selected .opt-check-inner { opacity: 1; transform: scale(1); }
+
+    /* ── Likert ── */
+    .likert-wrap { display: flex; flex-direction: column; gap: 14px; }
+    .likert-labels {
+      display: flex; justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-hint);
+      letter-spacing: 0.02em;
+    }
+    .likert-options { display: flex; gap: 8px; }
+    .likert-btn {
+      flex: 1;
+      height: 58px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: border-color 0.2s var(--ease-out),
+                  background 0.2s var(--ease-out),
+                  color 0.2s var(--ease-out),
+                  transform 0.2s var(--ease-out),
+                  box-shadow 0.2s var(--ease-out);
+    }
+    .likert-btn:hover {
+      border-color: var(--green);
+      color: var(--green);
+      transform: translateY(-3px);
+    }
+    .likert-btn.selected {
+      border-color: var(--green);
+      background: var(--green);
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 18px -8px rgba(29,158,117,0.5);
+      animation: likertPop 0.5s var(--ease-bounce);
+    }
+    @keyframes likertPop {
+      0%   { transform: translateY(-3px) scale(1); }
+      45%  { transform: translateY(-3px) scale(1.08); }
+      100% { transform: translateY(-3px) scale(1); }
+    }
+
+    /* ── Nav ── */
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .btn-next {
+      padding: 13px 24px;
+      background: var(--text);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+      transition: opacity 0.4s var(--ease-out),
+                  transform 0.4s var(--ease-bounce),
+                  background 0.2s var(--ease-out),
+                  box-shadow 0.2s var(--ease-out);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .btn-next.enabled {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+      box-shadow: 0 6px 18px -6px rgba(20,32,28,0.4);
+    }
+    .btn-next:hover { background: #0a1310; box-shadow: 0 10px 22px -8px rgba(20,32,28,0.5); }
+    .btn-next:active { transform: translateY(0) scale(0.97); }
+    .btn-next.submit { background: var(--green); }
+    .btn-next.submit:hover { background: var(--green-deep); }
+
+    .btn-back {
+      padding: 11px 16px;
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.15s var(--ease-out), color 0.15s var(--ease-out), transform 0.2s var(--ease-out);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .btn-back:hover { color: var(--text); transform: translateX(-2px); }
+    .btn-back .arr { transition: transform 0.2s var(--ease-out); }
+    .btn-back:hover .arr { transform: translateX(-2px); }
+
+    /* ── Welcome ── */
+    .welcome-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .welcome-logo {
+      height: 44px;
+      width: auto;
+      object-fit: contain;
+      filter: saturate(0.9);
+    }
+    .welcome-author {
+      text-align: right;
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .welcome-author-label {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-hint);
+      font-weight: 500;
+    }
+    .welcome-author-name {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: -0.005em;
+    }
+
+    .welcome-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--green);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .welcome-eyebrow::before {
+      content: '';
+      width: 18px; height: 1px;
+      background: var(--green);
+    }
+    .welcome-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-weight: 500;
+      font-size: 36px;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .welcome-title em {
+      font-style: italic;
+      color: var(--green-deep);
+      font-weight: 400;
+    }
+    .welcome-sub {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.65;
+      max-width: 95%;
+    }
+    .welcome-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+    .meta-pill {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 12px;
+      color: var(--text-muted);
+      background: #f6f5f1;
+      padding: 7px 13px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+    }
+    .meta-pill i { color: var(--green); font-size: 12px; }
+
+    .btn-start {
+      padding: 15px 28px;
+      background: var(--text);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      align-self: flex-start;
+      transition: background 0.2s var(--ease-out), transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 6px 18px -6px rgba(20,32,28,0.4);
+    }
+    .btn-start:hover { background: #0a1310; box-shadow: 0 12px 24px -8px rgba(20,32,28,0.5); transform: translateY(-1px); }
+    .btn-start:active { transform: translateY(0) scale(0.97); }
+    .btn-start .arrow-wrap {
+      display: inline-flex;
+      width: 22px; height: 22px;
+      align-items: center; justify-content: center;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      transition: background 0.2s var(--ease-out), transform 0.3s var(--ease-out);
+    }
+    .btn-start:hover .arrow-wrap { background: var(--green); transform: translateX(3px); }
+
+    /* ── Thanks ── */
+    .thanks-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 16px;
+      padding: 18px 0;
+    }
+    .thanks-check {
+      width: 84px; height: 84px;
+      border-radius: 50%;
+      background: var(--green-soft);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      transform: scale(0);
+      animation: thanksCheckPop 0.85s var(--ease-bounce) 0.1s forwards;
+    }
+    .thanks-check::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 2px solid var(--green);
+      opacity: 0;
+      animation: thanksRing 1.5s var(--ease-out) 0.5s forwards;
+    }
+    .thanks-check i {
+      font-size: 38px;
+      color: var(--green);
+      opacity: 0;
+      transform: scale(0.5);
+      animation: thanksIconIn 0.5s var(--ease-bounce) 0.5s forwards;
+    }
+    @keyframes thanksCheckPop {
+      0%   { transform: scale(0) rotate(-30deg); }
+      60%  { transform: scale(1.15) rotate(5deg); }
+      100% { transform: scale(1) rotate(0); }
+    }
+    @keyframes thanksIconIn {
+      0%   { opacity: 0; transform: scale(0.4); }
+      60%  { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes thanksRing {
+      0%   { opacity: 0.5; transform: scale(0.6); }
+      100% { opacity: 0; transform: scale(1.4); }
+    }
+
+    .thanks-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-weight: 500;
+      font-size: 30px;
+      line-height: 1.2;
+      letter-spacing: -0.015em;
+      color: var(--text);
+      opacity: 0;
+      animation: thanksTextIn 0.6s var(--ease-out) 0.8s forwards;
+    }
+    .thanks-title em { font-style: italic; color: var(--green-deep); font-weight: 400; }
+    .thanks-sub {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.65;
+      max-width: 420px;
+      opacity: 0;
+      animation: thanksTextIn 0.6s var(--ease-out) 1.0s forwards;
+    }
+    .thanks-foot {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--text-hint);
+      opacity: 0;
+      animation: thanksTextIn 0.6s var(--ease-out) 1.2s forwards;
+      display: flex; gap: 8px; align-items: center;
+    }
+    .thanks-foot .sig {
+      font-family: 'Fraunces', Georgia, serif;
+      font-style: italic;
+      color: var(--text-muted);
+    }
+    @keyframes thanksTextIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      body { padding: 32px 14px 60px; }
+      .topbar { margin-bottom: 16px; }
+      #card { padding: 30px 24px; min-height: 360px; }
+      .screen.leaving, .screen.leaving-back { top: 30px; left: 24px; width: calc(100% - 48px); }
+      .question-title { font-size: 21px; }
+      .welcome-title { font-size: 28px; }
+      .welcome-logo { height: 36px; }
+      .welcome-author-name { font-size: 14px; }
+      .likert-btn { height: 50px; font-size: 16px; }
+      .thanks-title { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress-wrap"><div id="progress-fill"></div></div>
+
+<div class="topbar">
+  <div class="topbar-brand"><span class="dot"></span> TCC · Finanças Comportamentais</div>
+  <div class="topbar-step" id="topbar-step">
+</div>
+</div>
+
+<div id="card">
+
+  <!-- WELCOME -->
+  <div class="screen active" id="screen-welcome">
+    <div class="welcome-header">
+      <img class="welcome-logo" src="assets/mba-usp-esalq.png" alt="MBA USP/Esalq" />
+      <div class="welcome-author">
+        <div class="welcome-author-label">Pesquisa de</div>
+        <div class="welcome-author-name">Tiffani Yazigi Oliveira</div>
+      </div>
+    </div>
+    <div class="welcome-eyebrow">Pesquisa Acadêmica · TCC</div>
+    <div class="welcome-title">Finanças <em>comportamentais</em> e decisão de investimentos</div>
+    <div class="welcome-sub">Estudo sobre o comportamento de investidores brasileiros em relação a investimentos internacionais e criptomoedas. Suas respostas são <strong>anônimas</strong> e usadas exclusivamente para fins acadêmicos.</div>
+    <div class="welcome-meta" style="gap: 5px; width: 477px; height: 27px">
+      <div class="meta-pill"><i class="fa-regular fa-clock"></i> 5 minutos</div>
+      <div class="meta-pill"><i class="fa-solid fa-lock"></i> Anônimo</div>
+      <div class="meta-pill"><i class="fa-solid fa-graduation-cap"></i> Uso acadêmico</div>
+      <div class="meta-pill"><i class="fa-solid fa-list-check"></i> 15 perguntas</div>
+    </div>
+    <button class="btn-start" onclick="goTo(1, 'forward')">
+      Começar
+      <span class="arrow-wrap"><i class="fa-solid fa-arrow-right"></i></span>
+    </button>
+  </div>
+
+  <!-- Q1 -->
+  <div class="screen" id="screen-1">
+    <div class="block-label">Bloco 1 · Perfil do Investidor</div>
+    <div class="question-title">Qual sua faixa etária?</div>
+    <div class="options-grid" id="opts-1">
+      <button class="opt-btn" onclick="select(1,'Até 24 anos',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Até 24 anos</button>
+      <button class="opt-btn" onclick="select(1,'25 a 34 anos',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>25 a 34 anos</button>
+      <button class="opt-btn" onclick="select(1,'35 a 44 anos',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>35 a 44 anos</button>
+      <button class="opt-btn" onclick="select(1,'45 a 54 anos',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>45 a 54 anos</button>
+      <button class="opt-btn" onclick="select(1,'55 anos ou mais',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>55 anos ou mais</button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(0,'back')"><i class="fa-solid fa-arrow-left arr"></i> Voltar</button>
+      <button class="btn-next" id="next-1" onclick="goTo(2,'forward')">Próximo <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="screen" id="screen-2">
+    <div class="block-label">Bloco 1 · Perfil do Investidor</div>
+    <div class="question-title">Há quanto tempo você investe no mercado financeiro?</div>
+    <div class="options-grid" id="opts-2">
+      <button class="opt-btn" onclick="select(2,'Menos de 1 ano',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Menos de 1 ano</button>
+      <button class="opt-btn" onclick="select(2,'Entre 1 e 3 anos',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Entre 1 e 3 anos</button>
+      <button class="opt-btn" onclick="select(2,'Entre 3 e 5 anos',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Entre 3 e 5 anos</button>
+      <button class="opt-btn" onclick="select(2,'Mais de 5 anos',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Mais de 5 anos</button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(1,'back')"><i class="fa-solid fa-arrow-left arr"></i> Voltar</button>
+      <button class="btn-next" id="next-2" onclick="goTo(3,'forward')">Próximo <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="screen" id="screen-3">
+    <div class="block-label">Bloco 1 · Perfil do Investidor</div>
+    <div class="question-title">Como você classifica seu perfil de investidor?</div>
+    <div class="options-grid" id="opts-3">
+      <button class="opt-btn" onclick="select(3,'Conservador',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Conservador</button>
+      <button class="opt-btn" onclick="select(3,'Moderado',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Moderado</button>
+      <button class="opt-btn" onclick="select(3,'Arrojado',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Arrojado</button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(2,'back')"><i class="fa-solid fa-arrow-left arr"></i> Voltar</button>
+      <button class="btn-next" id="next-3" onclick="goTo(4,'forward')">Próximo <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="screen" id="screen-4">
+    <div class="block-label">Bloco 1 · Perfil do Investidor</div>
+    <div class="question-title">Qual sua faixa de renda mensal?</div>
+    <div class="options-grid" id="opts-4">
+      <button class="opt-btn" onclick="select(4,'Até R$ 5.000',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Até R$ 5.000</button>
+      <button class="opt-btn" onclick="select(4,'De R$ 5.001 a R$ 10.000',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>De R$ 5.001 a R$ 10.000</button>
+      <button class="opt-btn" onclick="select(4,'De R$ 10.001 a R$ 20.000',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>De R$ 10.001 a R$ 20.000</button>
+      <button class="opt-btn" onclick="select(4,'Acima de R$ 20.000',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Acima de R$ 20.000</button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(3,'back')"><i class="fa-solid fa-arrow-left arr"></i> Voltar</button>
+      <button class="btn-next" id="next-4" onclick="goTo(5,'forward')">Próximo <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="screen" id="screen-5">
+    <div class="block-label">Bloco 2 · Composição da Carteira</div>
+    <div class="question-title">Você possui exposição a ativos internacionais?</div>
+    <div class="options-grid" id="opts-5">
+      <button class="opt-btn" onclick="select(5,'Sim',this); skipInternacional=false;"><div class="opt-check"><div class="opt-check-inner"></div></div>Sim</button>
+      <button class="opt-btn" onclick="select(5,'Não',this); skipInternacional=true;"><div class="opt-check"><div class="opt-check-inner"></div></div>Não</button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(4,'back')"><i class="fa-solid fa-arrow-left arr"></i> Voltar</button>
+      <button class="btn-next" id="next-5" onclick="handleP5Next()">Próximo <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="screen" id="screen-6">
+    <div class="block-label">Bloco 2 · Composição da Carteira</div>
+    <div class="question-title">Aproximadamente qual percentual da sua carteira está investido em ativos internacionais?</div>
+    <div class="options-grid" id="opts-6">
+      <button class="opt-btn" onclick="select(6,'0%',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>0%</button>
+      <button class="opt-btn" onclick="select(6,'Até 10%',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Até 10%</button>
+      <button class="opt-btn" onclick="select(6,'Entre 11% e 25%',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Entre 11% e 25%</button>
+      <button class="opt-btn" onclick="select(6,'Entre 26% e 50%',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Entre 26% e 50%</button>
+      <button class="opt-btn" onclick="select(6,'Mais de 50%',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Mais de 50%</button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(5,'back')"><i class="fa-solid fa-arrow-left arr"></i> Voltar</button>
+      <button class="btn-next" id="next-6" onclick="goTo(7,'forward')">Próximo <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="screen" id="screen-7">
+    <div class="block-label">Bloco 2 · Composição da Carteira</div>
+    <div class="question-title">Você possui investimentos em criptomoedas?</div>
+    <div class="options-grid" id="opts-7">
+      <button class="opt-btn" onclick="select(7,'Sim',this); skipCripto=false;"><div class="opt-check"><div class="opt-check-inner"></div></div>Sim</button>
+      <button class="opt-btn" onclick="select(7,'Não',this); skipCripto=true;"><div class="opt-check"><div class="opt-check-inner"></div></div>Não</button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goBackFrom7()"><i class="fa-solid fa-arrow-left arr"></i> Voltar</button>
+      <button class="btn-next" id="next-7" onclick="handleP7Next()">Próximo <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="screen" id="screen-8">
+    <div class="block-label">Bloco 2 · Composição da Carteira</div>
+    <div class="question-title">Aproximadamente qual percentual da sua carteira está investido em criptomoedas?</div>
+    <div class="options-grid" id="opts-8">
+      <button class="opt-btn" onclick="select(8,'0%',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>0%</button>
+      <button class="opt-btn" onclick="select(8,'Até 5%',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Até 5%</button>
+      <button class="opt-btn" onclick="select(8,'Entre 6% e 15%',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Entre 6% e 15%</button>
+      <button class="opt-btn" onclick="select(8,'Entre 16% e 30%',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Entre 16% e 30%</button>
+      <button class="opt-btn" onclick="select(8,'Mais de 30%',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Mais de 30%</button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(7,'back')"><i class="fa-solid fa-arrow-left arr"></i> Voltar</button>
+      <button class="btn-next" id="next-8" onclick="goTo(9,'forward')">Próximo <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="screen" id="screen-9">
+    <div class="block-label">Bloco 2 · Composição da Carteira</div>
+    <div class="question-title">O que mais influenciou sua decisão de investir em criptomoedas?</div>
+    <div class="options-grid" id="opts-9">
+      <button class="opt-btn" onclick="select(9,'Potencial de retorno financeiro',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Potencial de retorno financeiro</button>
+      <button class="opt-btn" onclick="select(9,'Influência de redes sociais',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Influência de redes sociais</button>
+      <button class="opt-btn" onclick="select(9,'Influência de amigos ou familiares',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Influência de amigos ou familiares</button>
+      <button class="opt-btn" onclick="select(9,'Diversificação da carteira',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Diversificação da carteira</button>
+      <button class="opt-btn" onclick="select(9,'Interesse pelo mercado de tecnologia',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Interesse pelo mercado de tecnologia</button>
+      <button class="opt-btn" onclick="select(9,'Outro',this)"><div class="opt-check"><div class="opt-check-inner"></div></div>Outro</button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(8,'back')"><i class="fa-solid fa-arrow-left arr"></i> Voltar</button>
+      <button class="btn-next" id="next-9" onclick="goTo(10,'forward')">Próximo <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="screen" id="screen-10">
+    <div class="block-label">Bloco 3 · Comportamento do Investidor</div>
+    <div class="question-title">Informações vistas com frequência nas redes sociais influenciam minhas decisões de investimento.</div>
+    <div class="likert-wrap">
+      <div class="likert-labels"><span>Discordo totalmente</span><span>Concordo totalmente</span></div>
+      <div class="likert-options" id="opts-10">
+        <button class="likert-btn" onclick="selectLikert(10,1,this)">1</button>
+        <button class="likert-btn" onclick="selectLikert(10,2,this)">2</button>
+        <button class="likert-btn" onclick="selectLikert(10,3,this)">3</button>
+        <button class="likert-btn" onclick="selectLikert(10,4,this)">4</button>
+        <button class="likert-btn" onclick="selectLikert(10,5,this)">5</button>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goBackFrom10()"><i class="fa-solid fa-arrow-left arr"></i> Voltar</button>
+      <button class="btn-next" id="next-10" onclick="goTo(11,'forward')">Próximo <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="screen" id="screen-11">
+    <div class="block-label">Bloco 3 · Comportamento do Investidor</div>
+    <div class="question-title">Prefiro investir em ativos brasileiros por acreditar que conheço melhor o mercado nacional.</div>
+    <div class="likert-wrap">
+      <div class="likert-labels"><span>Discordo totalmente</span><span>Concordo totalmente</span></div>
+      <div class="likert-options" id="opts-11">
+        <button class="likert-btn" onclick="selectLikert(11,1,this)">1</button>
+        <button class="likert-btn" onclick="selectLikert(11,2,this)">2</button>
+        <button class="likert-btn" onclick="selectLikert(11,3,this)">3</button>
+        <button class="likert-btn" onclick="selectLikert(11,4,this)">4</button>
+        <button class="likert-btn" onclick="selectLikert(11,5,this)">5</button>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(10,'back')"><i class="fa-solid fa-arrow-left arr"></i> Voltar</button>
+      <button class="btn-next" id="next-11" onclick="goTo(12,'forward')">Próximo <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="screen" id="screen-12">
+    <div class="block-label">Bloco 3 · Comportamento do Investidor</div>
+    <div class="question-title">Mesmo considerando os benefícios da diversificação internacional, prefiro manter a maior parte dos meus investimentos no Brasil.</div>
+    <div class="likert-wrap">
+      <div class="likert-labels"><span>Discordo totalmente</span><span>Concordo totalmente</span></div>
+      <div class="likert-options" id="opts-12">
+        <button class="likert-btn" onclick="selectLikert(12,1,this)">1</button>
+        <button class="likert-btn" onclick="selectLikert(12,2,this)">2</button>
+        <button class="likert-btn" onclick="selectLikert(12,3,this)">3</button>
+        <button class="likert-btn" onclick="selectLikert(12,4,this)">4</button>
+        <button class="likert-btn" onclick="selectLikert(12,5,this)">5</button>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(11,'back')"><i class="fa-solid fa-arrow-left arr"></i> Voltar</button>
+      <button class="btn-next" id="next-12" onclick="goTo(13,'forward')">Próximo <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="screen" id="screen-13">
+    <div class="block-label">Bloco 3 · Comportamento do Investidor</div>
+    <div class="question-title">Acredito que consigo identificar boas oportunidades de investimento antes da maioria das pessoas.</div>
+    <div class="likert-wrap">
+      <div class="likert-labels"><span>Discordo totalmente</span><span>Concordo totalmente</span></div>
+      <div class="likert-options" id="opts-13">
+        <button class="likert-btn" onclick="selectLikert(13,1,this)">1</button>
+        <button class="likert-btn" onclick="selectLikert(13,2,this)">2</button>
+        <button class="likert-btn" onclick="selectLikert(13,3,this)">3</button>
+        <button class="likert-btn" onclick="selectLikert(13,4,this)">4</button>
+        <button class="likert-btn" onclick="selectLikert(13,5,this)">5</button>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(12,'back')"><i class="fa-solid fa-arrow-left arr"></i> Voltar</button>
+      <button class="btn-next" id="next-13" onclick="goTo(14,'forward')">Próximo <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="screen" id="screen-14">
+    <div class="block-label">Bloco 3 · Comportamento do Investidor</div>
+    <div class="question-title">Costumo acreditar que ativos que tiveram forte valorização recente continuarão apresentando bom desempenho.</div>
+    <div class="likert-wrap">
+      <div class="likert-labels"><span>Discordo totalmente</span><span>Concordo totalmente</span></div>
+      <div class="likert-options" id="opts-14">
+        <button class="likert-btn" onclick="selectLikert(14,1,this)">1</button>
+        <button class="likert-btn" onclick="selectLikert(14,2,this)">2</button>
+        <button class="likert-btn" onclick="selectLikert(14,3,this)">3</button>
+        <button class="likert-btn" onclick="selectLikert(14,4,this)">4</button>
+        <button class="likert-btn" onclick="selectLikert(14,5,this)">5</button>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(13,'back')"><i class="fa-solid fa-arrow-left arr"></i> Voltar</button>
+      <button class="btn-next" id="next-14" onclick="goTo(15,'forward')">Próximo <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="screen" id="screen-15">
+    <div class="block-label">Bloco 3 · Comportamento do Investidor</div>
+    <div class="question-title">Considero criptomoedas investimentos mais arriscados do que ativos internacionais tradicionais.</div>
+    <div class="likert-wrap">
+      <div class="likert-labels"><span>Discordo totalmente</span><span>Concordo totalmente</span></div>
+      <div class="likert-options" id="opts-15">
+        <button class="likert-btn" onclick="selectLikert(15,1,this)">1</button>
+        <button class="likert-btn" onclick="selectLikert(15,2,this)">2</button>
+        <button class="likert-btn" onclick="selectLikert(15,3,this)">3</button>
+        <button class="likert-btn" onclick="selectLikert(15,4,this)">4</button>
+        <button class="likert-btn" onclick="selectLikert(15,5,this)">5</button>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(14,'back')"><i class="fa-solid fa-arrow-left arr"></i> Voltar</button>
+      <button class="btn-next submit" id="next-15" onclick="submitForm()">
+        <i class="fa-solid fa-paper-plane"></i> Enviar respostas
+      </button>
+    </div>
+  </div>
+
+  <!-- THANKS -->
+  <div class="screen" id="screen-thanks">
+    <div class="thanks-wrap">
+      <div class="thanks-check"><i class="fa-solid fa-check"></i></div>
+      <div class="thanks-title">Obrigado pela <em>participação</em>!</div>
+      <div class="thanks-sub">Suas respostas foram registradas com sucesso e contribuirão para a pesquisa acadêmica sobre finanças comportamentais e decisão de investimentos de investidores brasileiros.</div>
+      <div class="thanks-foot">
+        <span class="sig">Tiffani Yazigit Oliveira</span>
+        <span>·</span>
+        <span>MBA USP/Esalq</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const SHEETS_URL = "https://script.google.com/macros/s/AKfycbwtPdorLwbevocSoxYY2VzoIDCAsoG-txdCqCnX_afc55m50jjMVGXBG1hlPtJ3UoNE/exec";
+
+  const answers = {};
+  let skipInternacional = false;
+  let skipCripto = false;
+  let currentScreen = 0;
+  let transitioning = false;
+  const TOTAL = 15;
+
+  function updateProgress(n) {
+    let pct = 0;
+    if (n === 'thanks') pct = 100;
+    else if (typeof n === 'number') pct = n === 0 ? 0 : Math.round((n / TOTAL) * 100);
+    document.getElementById('progress-fill').style.width = pct + '%';
+
+    const tb = document.getElementById('topbar-step');
+    if (n === 0) tb.textContent = 'Bem-vindo';
+    else if (n === 'thanks') tb.textContent = 'Concluído';
+    else tb.textContent = `Pergunta ${n} de ${TOTAL}`;
+  }
+
+  function goTo(n, direction) {
+    if (transitioning) return;
+    transitioning = true;
+
+    const currentId = currentScreen === 0 ? 'screen-welcome' : (currentScreen === 'thanks' ? 'screen-thanks' : 'screen-' + currentScreen);
+    const nextId    = n === 0 ? 'screen-welcome' : (n === 'thanks' ? 'screen-thanks' : 'screen-' + n);
+
+    const currentEl = document.getElementById(currentId);
+    const nextEl    = document.getElementById(nextId);
+
+    const leaveClass  = direction === 'back' ? 'leaving-back' : 'leaving';
+    const enterClass  = direction === 'back' ? 'entering-back' : '';
+
+    currentEl.classList.add(leaveClass);
+
+    setTimeout(() => {
+      currentEl.classList.remove('active', leaveClass);
+      // Force reflow so staggered children animations restart
+      void nextEl.offsetWidth;
+      nextEl.classList.add('active');
+      if (enterClass) nextEl.classList.add(enterClass);
+      setTimeout(() => {
+        nextEl.classList.remove(enterClass);
+        transitioning = false;
+      }, 500);
+    }, 280);
+
+    currentScreen = n === 'thanks' ? 'thanks' : n;
+    updateProgress(currentScreen);
+  }
+
+  function select(q, val, btn) {
+    answers['p' + q] = val;
+    document.getElementById('opts-' + q).querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+    // re-trigger animation if same was clicked
+    btn.classList.remove('selected');
+    void btn.offsetWidth;
+    btn.classList.add('selected');
+    const next = document.getElementById('next-' + q);
+    if (next) next.classList.add('enabled');
+  }
+
+  function selectLikert(q, val, btn) {
+    answers['p' + q] = val;
+    document.getElementById('opts-' + q).querySelectorAll('.likert-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.remove('selected');
+    void btn.offsetWidth;
+    btn.classList.add('selected');
+    const next = document.getElementById('next-' + q);
+    if (next) next.classList.add('enabled');
+  }
+
+  function handleP5Next() {
+    if (skipInternacional) { answers['p6'] = '0%'; goTo(7, 'forward'); }
+    else goTo(6, 'forward');
+  }
+
+  function handleP7Next() {
+    if (skipCripto) { answers['p8'] = '0%'; answers['p9'] = 'Não possui'; goTo(10, 'forward'); }
+    else goTo(8, 'forward');
+  }
+
+  function goBackFrom7() {
+    if (skipInternacional) goTo(5, 'back');
+    else goTo(6, 'back');
+  }
+
+  function goBackFrom10() {
+    if (skipCripto) goTo(7, 'back');
+    else goTo(9, 'back');
+  }
+
+  function submitForm() {
+    const btn = document.getElementById('next-15');
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+    btn.classList.remove('enabled');
+
+    const payload = {};
+    for (let i = 1; i <= 15; i++) payload['p' + i] = answers['p' + i] || '';
+
+    fetch(SHEETS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(() => goTo('thanks', 'forward'))
+    .catch(() => goTo('thanks', 'forward'));
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (transitioning) return;
+    if (e.key === 'Enter') {
+      // welcome
+      if (currentScreen === 0) { goTo(1, 'forward'); return; }
+      if (currentScreen === 15) { submitForm(); return; }
+      if (typeof currentScreen === 'number') {
+        const next = document.getElementById('next-' + currentScreen);
+        if (next && next.classList.contains('enabled')) next.click();
+      }
+    }
+    if (e.key >= '1' && e.key <= '5' && typeof currentScreen === 'number' && currentScreen >= 10) {
+      const idx = parseInt(e.key, 10);
+      const opts = document.getElementById('opts-' + currentScreen);
+      if (opts) {
+        const btn = opts.querySelectorAll('.likert-btn')[idx - 1];
+        if (btn) btn.click();
+      }
+    }
+  });
+</script>
+</body>
+</html>
