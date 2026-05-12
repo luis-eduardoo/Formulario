@@ -55,7 +55,6 @@
       background-attachment: fixed;
     }
 
-    /* ── Top mark ── */
     .topbar {
       width: 100%;
       max-width: 560px;
@@ -83,7 +82,6 @@
     }
     .topbar-step { font-size: 12px; color: var(--text-hint); font-variant-numeric: tabular-nums; }
 
-    /* ── Progress bar ── */
     #progress-wrap {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -109,7 +107,6 @@
       opacity: 0.7;
     }
 
-    /* ── Card container ── */
     #card {
       width: 100%;
       max-width: 560px;
@@ -123,7 +120,6 @@
       overflow: hidden;
     }
 
-    /* corner ornament */
     #card::before {
       content: '';
       position: absolute;
@@ -134,7 +130,6 @@
       pointer-events: none;
     }
 
-    /* ── Screen transitions ── */
     .screen {
       display: none;
       flex-direction: column;
@@ -179,7 +174,6 @@
       to   { opacity: 0; transform: translateX(40px); }
     }
 
-    /* Stagger inside each active screen */
     .screen.active > * {
       opacity: 0;
       animation: staggerIn 0.55s var(--ease-out) both;
@@ -197,7 +191,6 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ── Block label ── */
     .block-label {
       font-size: 11px;
       font-weight: 600;
@@ -213,7 +206,6 @@
       display: inline-block;
     }
 
-    /* ── Question title ── */
     .question-title {
       font-family: 'Fraunces', Georgia, serif;
       font-weight: 500;
@@ -224,7 +216,6 @@
       text-wrap: pretty;
     }
 
-    /* ── Options ── */
     .options-grid { display: flex; flex-direction: column; gap: 8px; }
 
     .opt-btn {
@@ -272,10 +263,10 @@
     .opt-check {
       width: 22px; height: 22px;
       border-radius: 50%;
+      border: 1.5px solid #c8ccca;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
       transition: background 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
-      border: 1.5px solid #c8ccca;
     }
     .opt-btn.selected .opt-check {
       background: var(--green);
@@ -297,7 +288,6 @@
     }
     .opt-btn.selected .opt-check-inner { opacity: 1; transform: scale(1); }
 
-    /* ── Likert ── */
     .likert-wrap { display: flex; flex-direction: column; gap: 14px; }
     .likert-labels {
       display: flex; justify-content: space-between;
@@ -342,7 +332,6 @@
       100% { transform: translateY(-3px) scale(1); }
     }
 
-    /* ── Nav ── */
     .nav-row {
       display: flex;
       justify-content: space-between;
@@ -397,7 +386,6 @@
     .btn-back .arr { transition: transform 0.2s var(--ease-out); }
     .btn-back:hover .arr { transform: translateX(-2px); }
 
-    /* ── Welcome ── */
     .welcome-header {
       display: flex;
       align-items: center;
@@ -502,7 +490,6 @@
     }
     .btn-start:hover .arrow-wrap { background: var(--green); transform: translateX(3px); }
 
-    /* ── Thanks ── */
     .thanks-wrap {
       display: flex;
       flex-direction: column;
@@ -588,7 +575,6 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ── Responsive ── */
     @media (max-width: 600px) {
       body { padding: 32px 14px 60px; }
       .topbar { margin-bottom: 16px; }
@@ -618,7 +604,7 @@
   <!-- WELCOME -->
   <div class="screen active" id="screen-welcome">
     <div class="welcome-header">
-      <img class="welcome-logo" src="assets/mba-usp-esalq.png" alt="MBA USP/Esalq" />
+      <img class="welcome-logo" src="assets/mba-usp-esalq.png" alt="MBA USP/Esalq" onerror="this.style.display='none'" />
       <div class="welcome-author">
         <div class="welcome-author-label">Pesquisa de</div>
         <div class="welcome-author-name">Tiffani Yazigi Oliveira</div>
@@ -1031,7 +1017,6 @@
     .catch(() => goTo('thanks', 'forward'));
   }
 
-  // Keyboard navigation
   document.addEventListener('keydown', (e) => {
     if (transitioning) return;
     if (e.key === 'Enter') {
