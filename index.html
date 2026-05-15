@@ -609,7 +609,8 @@
 
 <div class="topbar">
   <div class="topbar-brand"><span class="dot"></span> TCC · Finanças Comportamentais</div>
-  <div class="topbar-step" id="topbar-step"></div>
+  <div class="topbar-step" id="topbar-step">
+</div>
 </div>
 
 <div id="card">
@@ -625,7 +626,7 @@
     <div class="welcome-eyebrow">Pesquisa Acadêmica · TCC</div>
     <div class="welcome-title">Finanças <em>comportamentais</em> e decisão de investimentos</div>
     <div class="welcome-sub">Estudo sobre o comportamento de investidores brasileiros em relação a investimentos internacionais e criptomoedas. Suas respostas são <strong>anônimas</strong> e usadas exclusivamente para fins acadêmicos.</div>
-    <div class="welcome-meta" style="gap: 5px">
+    <div class="welcome-meta" style="gap: 5px; width: 477px; height: 27px">
       <div class="meta-pill"><i class="fa-regular fa-clock"></i> 5 minutos</div>
       <div class="meta-pill"><i class="fa-solid fa-lock"></i> Anônimo</div>
       <div class="meta-pill"><i class="fa-solid fa-graduation-cap"></i> Uso acadêmico</div>
@@ -910,7 +911,7 @@
       <div class="thanks-title">Obrigado pela <em>participação</em>!</div>
       <div class="thanks-sub">Suas respostas foram registradas com sucesso e contribuirão para a pesquisa acadêmica sobre finanças comportamentais e decisão de investimentos de investidores brasileiros.</div>
       <div class="thanks-foot">
-        <span class="sig">Tiffani Yazigi Oliveira</span>
+        <span class="sig">Tiffani Yazigit Oliveira</span>
         <span>·</span>
         <span>MBA USP/Esalq</span>
       </div>
@@ -957,19 +958,17 @@
 
     currentEl.classList.add(leaveClass);
 
+    currentScreen = n === 'thanks' ? 'thanks' : n;
+    updateProgress(currentScreen);
+
     setTimeout(() => {
       currentEl.classList.remove('active', leaveClass);
       void nextEl.offsetWidth;
       nextEl.classList.add('active');
       if (enterClass) nextEl.classList.add(enterClass);
-      setTimeout(() => {
-        nextEl.classList.remove(enterClass);
-        transitioning = false;
-      }, 500);
+      transitioning = false;
+      setTimeout(() => nextEl.classList.remove(enterClass), 500);
     }, 280);
-
-    currentScreen = n === 'thanks' ? 'thanks' : n;
-    updateProgress(currentScreen);
   }
 
   function select(q, val, btn) {
@@ -1044,9 +1043,11 @@
     .catch(() => goTo('thanks', 'forward'));
   }
 
+  // Keyboard navigation
   document.addEventListener('keydown', (e) => {
     if (transitioning) return;
     if (e.key === 'Enter') {
+      // welcome
       if (currentScreen === 0) { goTo(1, 'forward'); return; }
       if (currentScreen === 15) { submitForm(); return; }
       if (typeof currentScreen === 'number') {
