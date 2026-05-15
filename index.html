@@ -977,12 +977,17 @@
   function select(q, val, btn) {
     answers['p' + q] = val;
     document.getElementById('opts-' + q).querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
-    // re-trigger animation if same was clicked
     btn.classList.remove('selected');
     void btn.offsetWidth;
     btn.classList.add('selected');
     const next = document.getElementById('next-' + q);
     if (next) next.classList.add('enabled');
+    clearTimeout(window._autoAdv);
+    window._autoAdv = setTimeout(() => {
+      if (q === 5) handleP5Next();
+      else if (q === 7) handleP7Next();
+      else if (q < 15) goTo(q + 1, 'forward');
+    }, 350);
   }
 
   function selectLikert(q, val, btn) {
@@ -993,6 +998,10 @@
     btn.classList.add('selected');
     const next = document.getElementById('next-' + q);
     if (next) next.classList.add('enabled');
+    clearTimeout(window._autoAdv);
+    window._autoAdv = setTimeout(() => {
+      if (q < 15) goTo(q + 1, 'forward');
+    }, 350);
   }
 
   function handleP5Next() {
