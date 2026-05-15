@@ -960,14 +960,11 @@
 
     setTimeout(() => {
       currentEl.classList.remove('active', leaveClass);
-      // Force reflow so staggered children animations restart
       void nextEl.offsetWidth;
       nextEl.classList.add('active');
       if (enterClass) nextEl.classList.add(enterClass);
-      setTimeout(() => {
-        nextEl.classList.remove(enterClass);
-        transitioning = false;
-      }, 500);
+      transitioning = false;
+      setTimeout(() => nextEl.classList.remove(enterClass), 500);
     }, 280);
 
     currentScreen = n === 'thanks' ? 'thanks' : n;
