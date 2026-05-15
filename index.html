@@ -921,7 +921,8 @@
 </div>
 
 <script>
-  const SHEETS_URL = "https://script.google.com/macros/s/AKfycbzFrOy4pFzm3R3GcPHwZWkk2XaT-JXtgWy8YGVghNFoJZjSq9bzUipWjVG0j8Bpf7FS/exec";
+  const SUPABASE_URL = "https://okmscfwzskkmsyebrbit.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rbXNjZnd6c2trbXN5ZWJyYml0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4OTg3MjYsImV4cCI6MjA5MjQ3NDcyNn0.hSNLMXopnwbxMvr5cnzIA79Sq9xANaf9ZEmxbJJJlgc";
 
   const answers = {};
   let skipInternacional = false;
@@ -1022,10 +1023,14 @@
     const payload = {};
     for (let i = 1; i <= 15; i++) payload['p' + i] = answers['p' + i] || '';
 
-    fetch(SHEETS_URL, {
+    fetch(`${SUPABASE_URL}/rest/v1/respostas_tcc`, {
       method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Prefer': 'return=minimal'
+      },
       body: JSON.stringify(payload)
     })
     .then(() => goTo('thanks', 'forward'))
